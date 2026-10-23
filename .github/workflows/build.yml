@@ -15,10 +15,10 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          # Вручную ставим libtinfo5 для Ubuntu 24.04
-          wget http://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.4-2_amd64.deb
-          sudo dpkg -i libtinfo5_6.4-2_amd64.deb
-          # Остальные зависимости
+          # Скачиваем рабочую версию libtinfo5
+          wget http://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.3_amd64.deb
+          sudo dpkg -i libtinfo5_6.3-2ubuntu0.3_amd64.deb
+          # Устанавливаем остальные зависимости
           sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
           
       - name: Install Python dependencies
