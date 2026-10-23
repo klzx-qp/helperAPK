@@ -5,9 +5,10 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
-      - name: Set up Python
+      - name: Set up Python 3.9
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
@@ -15,13 +16,23 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf automake libtool libltdl-dev libtool-bin pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
+          # Устанавливаем libltdl7-dev для решения проблемы LT_SYS_SYMBOL_USCORE
+          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip \
+            autoconf automake libtool libltdl-dev libltdl7-dev libtool-bin \
+            pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev \
+            cmake libffi-dev libssl-dev
           
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
           pip install pyjnius
+          
+      - name: Clean previous build cache
+        run: |
+          # Критически важно: удаляем старый кэш, чтобы избежать ошибок компиляции libffi
+          rm -rf .buildozer
+          rm -rf bin
           
       - name: Build APK with Buildozer
         run: buildozer android debug
